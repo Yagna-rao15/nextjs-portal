@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { JWTPayload } from 'jose'
 
 export const SignupFormSchema = z
   .object({
@@ -34,3 +35,14 @@ export type FormState =
     message?: string
   }
   | undefined
+
+export interface SessionPayload extends JWTPayload {
+  user: {
+    id: string,
+    expiresAt: Date | number,
+  }
+  // JWT fields are inherited from JWTPayload:
+  // iat?: number
+  // exp?: number 
+  // jti?: string
+}

@@ -9,6 +9,7 @@ export default function Layout({ children, }: { children: React.ReactNode; }) {
           src="/svnit-logo.png"
           className="logo h-12em mx-auto mb-4"
           alt="SVNIT Logo"
+          width={256} height={256}
         />
         <h1 className="text-black font-bold text-4xl md:text-5xl">
           <strong>SVNIT SURAT</strong>

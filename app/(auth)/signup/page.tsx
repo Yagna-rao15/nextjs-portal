@@ -5,6 +5,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/app/actions/signup";
+import { redirect } from "next/navigation";
 
 export default function Page() {
   const [errors, setErrors] = React.useState<{
@@ -17,17 +18,15 @@ export default function Page() {
   const handleError = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-
     const result = await signup({}, formData);
-
     if (result?.errors) {
       setErrors(result.errors);
     } else {
       setErrors({});
       alert(result?.message || "Signup successful!");
-      e.currentTarget.reset();
+      redirect('/login')
     }
-  };
+  }
 
   return (
     <div className="mt-8 flex items-center mx-auto">
