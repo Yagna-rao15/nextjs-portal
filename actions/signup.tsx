@@ -1,7 +1,8 @@
-"use server"
+"use server";
 
-import { SignupFormSchema, FormState } from "@/app/lib/definitions";
+import { SignupFormSchema, FormState } from "@/lib/definitions";
 import { validateEmail } from "@/lib/utils";
+import { checkEmail } from "@/lib/db";
 import { sql } from '@vercel/postgres';
 
 export async function signup(state: FormState, formData: FormData) {
@@ -10,6 +11,7 @@ export async function signup(state: FormState, formData: FormData) {
     email: formData.get("email"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
+    otp: formData.get("otp"),
   });
 
   if (!validatedFields.success) {
@@ -18,7 +20,8 @@ export async function signup(state: FormState, formData: FormData) {
     };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const { name, email, password, otp } = validatedFields.data;
+
   const emailValidationError = validateEmail(email);
   if (emailValidationError) {
     return {
@@ -29,27 +32,38 @@ export async function signup(state: FormState, formData: FormData) {
   try {
     const existingUser = await sql`
       SELECT * FROM users WHERE email = ${email} LIMIT 1;`;
-    if (existingUser && existingUser.rows && existingUser.rows.length > 0) {
+
+    if (existingUser.rows.length > 0) {
       return {
         errors: { email: ["Email is already registered."] },
       };
     }
 
-    const result = await sql`
-      INSERT INTO users (name, email, password) 
-      VALUES (${name}, ${email}, ${password}) 
-      RETURNING id;
-    `;
+    const result = await checkEmail({ email });
+    if (result.otp === otp) {
+      const insertResult = await sql`
+        INSERT INTO users (name, email, password) 
+        VALUES (${name}, ${email}, ${password}) 
+        RETURNING id;
+      `;
 
-    const user = result.rows[0];
-    if (!user) {
-      throw new Error("User creation failed.");
+      const user = insertResult.rows[0];
+
+      if (!user) {
+        throw new Error("User creation failed.");
+      }
+
+      return { message: "Signup successful!" };
+    } else {
+      return {
+        errors: { otp: ["OTP is invalid or expired."] },
+      };
     }
-    return { message: "Signup successful!" };
+
   } catch (error) {
     console.error("Error creating user:", error);
     return {
-      message: "An error occurred while creating your account.",
+      errors: { general: ["An error occurred while creating your account."] },
     };
   }
 }

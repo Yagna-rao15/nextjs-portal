@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Layout({ children, }: { children: React.ReactNode; }) {
   return (
-    <div className="max-w-screen-xl mx-auto p-8 text-center mt-8" id="root">
+    <div className="max-w-screen-xl mx-auto p-8 text-center mt-8 bg-gray-100 p-6 rounded-lg shadow-lg w-[28rem]" id="root">
       <header>
         <Image
           src="/svnit-logo.png"

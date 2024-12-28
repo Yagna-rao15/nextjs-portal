@@ -18,6 +18,7 @@ export const SignupFormSchema = z
       })
       .trim(),
     confirmPassword: z.string(),
+    otp: z.string().length(6),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
