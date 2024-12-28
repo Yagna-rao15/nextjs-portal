@@ -19,8 +19,7 @@ export default function Page() {
 
     try {
       const response = await loginUser(email, password);
-      alert(response?.message || "Signup successful!");
-      window.location.href = '/dashboard';
+      console.log(response)
     } catch (err) {
       const error = err as Error
       if (error) {

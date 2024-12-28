@@ -38,12 +38,20 @@ export type FormState =
   | undefined
 
 export interface SessionPayload extends JWTPayload {
-  user: {
+  user?: {
     id: string,
     expiresAt: Date | number,
   }
-  // JWT fields are inherited from JWTPayload:
-  // iat?: number
-  // exp?: number 
-  // jti?: string
+}
+
+export interface LoginResponse {
+  message: string;
+}
+
+export interface User {
+  id: string;
+}
+
+export interface Session {
+  user: User;
 }
