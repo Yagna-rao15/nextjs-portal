@@ -17,7 +17,7 @@ export default function Layout({ children, }: { children: React.ReactNode; }) {
         <p className="text-black font-bold text-2xl md:text-3xl">
           <strong>Hostel Section</strong>
         </p>
-        <div className='flex items-center'>
+        <div className='flex items-center w-96'>
           {children}
         </div>
       </header>

@@ -13,6 +13,6 @@ export async function loginUser(email: string, password: string) {
   }
 
   await createSession(email);
-  redirect('/test')
+  redirect('/home')
 }
 

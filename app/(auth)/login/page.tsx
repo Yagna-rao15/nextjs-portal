@@ -70,6 +70,10 @@ export default function Page() {
         <div className="text-right mb-4 mt-4">
           <a href="/signup" className="text-gray-800">Create a New Account?</a>
         </div>
+
+        <div className="text-right mb-4 mt-4">
+          <a href="/login/forgot" className="text-gray-800">Forgot Password?</a>
+        </div>
       </form>
     </div>
   );

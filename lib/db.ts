@@ -33,3 +33,34 @@ export async function checkEmail({ email }: { email: string }) {
     throw new Error("Failed to check email.");
   }
 }
+
+export async function insertComplaint({
+  email,
+  complainType,
+  hostel,
+  name,
+  room,
+  mobile,
+  description,
+  fileUrl, // assuming file URL is passed
+}: {
+  email: string;
+  complainType: string;
+  hostel: string;
+  name: string;
+  room: string;
+  mobile: string;
+  description: string;
+  fileUrl?: string;
+}) {
+  try {
+    await sql`
+      INSERT INTO complaints (email, complain_type, hostel, name, room, mobile, description, file_url)
+      VALUES (${email}, ${complainType}, ${hostel}, ${name}, ${room}, ${mobile}, ${description}, ${fileUrl})
+    `;
+    console.log("Complaint submitted successfully.");
+  } catch (error) {
+    console.error("Error submitting complaint:", error);
+    throw new Error("Failed to submit complaint.");
+  }
+}
