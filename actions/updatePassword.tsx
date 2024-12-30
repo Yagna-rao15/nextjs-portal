@@ -47,7 +47,7 @@ export async function updatePassword(state: FormState, formData: FormData) {
         throw new Error("User creation failed.");
       }
 
-      return { message: "Signup successful!" };
+      return { message: "Password Changed successful!" };
     } else {
       return {
         errors: { otp: ["OTP is invalid or expired."] },
@@ -55,7 +55,7 @@ export async function updatePassword(state: FormState, formData: FormData) {
     }
 
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error changing Password:", error);
     return {
       errors: { general: ["An error occurred while creating your account."] },
     };

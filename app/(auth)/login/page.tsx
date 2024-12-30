@@ -40,7 +40,7 @@ export default function Page() {
         )}
 
         <Input
-          className="text-black w-full mb-4"
+          className="text-black w-80 mb-4"
           type="email"
           name="email"
           placeholder="Type your email address"

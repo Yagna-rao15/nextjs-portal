@@ -27,11 +27,25 @@ export async function sendOTP({ email }: { email: string }) {
     }
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      port: 465,
+      host: "smtp.gmail.com",
       auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_PASSWORD,
       },
+      secure: true,
+    });
+
+    await new Promise<void>((resolve, reject) => {
+      transporter.verify((error) => {
+        if (error) {
+          console.error("Transporter verification failed:", error);
+          reject(error);
+        } else {
+          console.log("Transporter is ready to send messages.");
+          resolve();
+        }
+      });
     });
 
     const mailOptions = {
@@ -41,7 +55,17 @@ export async function sendOTP({ email }: { email: string }) {
       text: `Your OTP is: ${otp}. It will expire in 10 minutes.`,
     };
 
-    await transporter.sendMail(mailOptions);
+    await new Promise<void>((resolve, reject) => {
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.error("Error sending email:", err);
+          reject(err);
+        } else {
+          console.log("Email sent successfully:", info);
+          resolve();
+        }
+      });
+    });
 
     return { success: true };
   } catch (error) {

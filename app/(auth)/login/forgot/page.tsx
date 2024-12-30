@@ -40,10 +40,10 @@ export default function Page() {
     const result = await updatePassword({}, formData);
 
     if (result?.errors) {
-      alert(result?.errors || "Signup Unsuccessful!");
+      alert(result?.errors || "Unable to Change your Password, Better luck next time");
     } else {
       setErrors({});
-      alert(result?.message || "Signup successful!");
+      alert(result?.message || "Password chaged successfully");
       redirect("/login");
     }
     setIsLoading(false);
@@ -69,7 +69,7 @@ export default function Page() {
   return (
     <div className="mt-8 flex flex-col items-center mx-auto">
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">Signup</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Forgot Password</h2>
 
         {/* Name Input */}
         <div>
@@ -150,15 +150,8 @@ export default function Page() {
 
         {/* Submit Button */}
         <Button className="w-full mt-6" type="submit" disabled={!otpSent || isLoading}>
-          {isLoading ? "Signing Up..." : "Signup"}
+          {isLoading ? "Just a sec....." : "Update Password"}
         </Button>
-
-        {/* Redirect to Login */}
-        <div className="text-right mt-4">
-          <a href="/login" className="text-gray-800 underline">
-            Already have an Account?
-          </a>
-        </div>
       </form>
     </div>
   );
