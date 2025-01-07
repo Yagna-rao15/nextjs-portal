@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/actions/signup";
 import { sendOTP } from "@/actions/sendOTP";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
+import { loginUser } from "@/actions/login";
 
 export default function Page() {
   const [errors, setErrors] = useState<{
@@ -22,6 +23,15 @@ export default function Page() {
   const [password, setPassword] = useState(""); // State for password
   const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingOTP, setIsLoadingOTP] = useState(false);
+
+  type ErrorState = {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    otp?: string[];
+    confirmPassword?: string[];
+  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,17 +46,28 @@ export default function Page() {
     }
 
     setIsLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const result = await signup({}, formData);
+    setErrors({});
 
-    if (result?.errors) {
-      alert(result?.message || "Signup Unsuccessful!");
-    } else {
-      setErrors({});
-      alert(result?.message || "Signup successful!");
-      redirect("/login");
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await signup({}, formData);
+
+      if (result?.errors) {
+        if ('general' in result.errors) {
+          setErrors({ password: result.errors.general });
+        } else {
+          setErrors(result.errors as ErrorState);
+        }
+      } else {
+        setErrors({});
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+      loginUser(email, password)
     }
-    setIsLoading(false);
   };
 
   // Send OTP to user's email
@@ -55,6 +76,8 @@ export default function Page() {
       alert("Please enter an email address first.");
       return;
     }
+
+    setIsLoadingOTP(true)
 
     const result = await sendOTP({ email });
 
@@ -70,11 +93,9 @@ export default function Page() {
   return (
     <div className="mt-8 flex flex-col items-center mx-auto">
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">Signup</h2>
-
-        {/* Name Input */}
         <div>
           <Input
+            id="name"
             className="text-black w-full"
             type="text"
             name="name"
@@ -100,7 +121,7 @@ export default function Page() {
             onClick={handleSendOTP}
             disabled={otpSent || isLoading}
           >
-            {otpSent ? "OTP Sent" : isLoading ? "Sending..." : "Get OTP"}
+            {otpSent ? "OTP Sent" : isLoadingOTP ? "Sending..." : "Get OTP"}
           </Button>
         </div>
         {errors.email && <p className="text-red-500">{errors.email[0]}</p>}
@@ -155,11 +176,13 @@ export default function Page() {
         </Button>
 
         {/* Redirect to Login */}
-        <div className="text-right mt-4">
-          <a href="/login" className="text-gray-800 underline">
-            Already have an Account?
+        <div className="mt-4 text-center text-sm">
+          Have an account?{" "}
+          <a href="/login" className="underline underline-offset-4">
+            Login
           </a>
         </div>
+
       </form>
     </div>
   );

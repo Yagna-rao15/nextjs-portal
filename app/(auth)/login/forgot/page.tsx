@@ -152,6 +152,12 @@ export default function Page() {
         <Button className="w-full mt-6" type="submit" disabled={!otpSent || isLoading}>
           {isLoading ? "Just a sec....." : "Update Password"}
         </Button>
+        <div className="mt-4 text-center text-sm">
+          Remember your password?{" "}
+          <a href="/login" className="underline underline-offset-4">
+            Login
+          </a>
+        </div>
       </form>
     </div>
   );

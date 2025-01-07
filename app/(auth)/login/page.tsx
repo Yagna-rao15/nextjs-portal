@@ -67,12 +67,15 @@ export default function Page() {
           {isLoading ? 'Logging in...' : 'Login'}
         </Button>
 
-        <div className="text-right mb-4 mt-4">
-          <a href="/signup" className="text-gray-800">Create a New Account?</a>
+        <div className="mt-4 text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <a href="/signup" className="underline underline-offset-4">
+            Sign up
+          </a>
         </div>
 
-        <div className="text-right mb-4 mt-4">
-          <a href="/login/forgot" className="text-gray-800">Forgot Password?</a>
+        <div className="text-center text-sm mb-4 mt-4">
+          <a href="/login/forgot" className="text-gray-800 underline underline-offset-4">Forgot Password?</a>
         </div>
       </form>
     </div>

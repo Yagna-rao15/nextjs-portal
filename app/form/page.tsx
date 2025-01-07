@@ -14,8 +14,10 @@ import {
 import { verifySession } from "@/lib/dal";
 import { startTransition } from "react";
 import { submitComplain } from "@/actions/complain";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { AlertCircle, Upload } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-// Define file type
 type FileType = File | null;
 
 const ComplainForm: React.FC = () => {
@@ -30,7 +32,6 @@ const ComplainForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
 
-  // Fetch the session and email when the component mounts
   React.useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -71,7 +72,7 @@ const ComplainForm: React.FC = () => {
         if (result.success && result.message) {
           setMessage(result.message);
         } else if (result.error) {
-          setMessage(result.error.toString || "Failed to submit the complain.");
+          setMessage(result.error.toString || "Failed to submit the complaint.");
         }
       });
     } catch (error) {
@@ -83,135 +84,155 @@ const ComplainForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl mx-auto space-y-6 p-6 bg-gray-100 rounded-lg shadow-md">
-      <div className="text-black font-bold text-2xl text-center">Complaint Form</div>
-      <div className="text-gray-500 text-center text-lg">Please register your complaint below</div>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <Card className="max-w-3xl mx-auto">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-2xl font-bold tracking-tight">Complaint Registration</CardTitle>
+          <CardDescription className="text-gray-500">
+            Please provide the details of your complaint below
+          </CardDescription>
+        </CardHeader>
 
-      <form onSubmit={handleSubmit} className="w-full space-y-6">
-        {/* Complain Type */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="complainType">
-            Complaint Type
-          </label>
-          <Select required onValueChange={setComplainType}>
-            <SelectTrigger className="w-full text-black border border-gray-300 rounded-md p-2">
-              <SelectValue placeholder="Select Complaint Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="General">General</SelectItem>
-              <SelectItem value="Mess">Mess</SelectItem>
-              <SelectItem value="Electricity">Electricity</SelectItem>
-              <SelectItem value="Bathroom">Bathroom</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Complaint Type */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="complainType">
+                  Complaint Type
+                </label>
+                <Select required onValueChange={setComplainType}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="General">General</SelectItem>
+                    <SelectItem value="Mess">Mess</SelectItem>
+                    <SelectItem value="Electricity">Electricity</SelectItem>
+                    <SelectItem value="Bathroom">Bathroom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-        {/* Hostel Selection */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="hostel">
-            Select Hostel
-          </label>
-          <Select required onValueChange={setHostel}>
-            <SelectTrigger className="w-full text-black border border-gray-300 rounded-md p-2">
-              <SelectValue placeholder="Select Hostel" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Gajjar Bhavan">Gajjar Bhavan</SelectItem>
-              <SelectItem value="Atal Bihari Vajpaye Bhavan">Atal Bihari Vajpaye Bhavan</SelectItem>
-              <SelectItem value="Bhabha Bhavan">Bhabha Bhavan</SelectItem>
-              <SelectItem value="Tagore Bhavan">Tagore Bhavan</SelectItem>
-              <SelectItem value="Swamy Bhavan">Swamy Bhavan</SelectItem>
-              <SelectItem value="Mother Teresa Bhavan">Mother Teresa Bhavan</SelectItem>
-              <SelectItem value="Raman Bhavan">Raman Bhavan</SelectItem>
-              <SelectItem value="Sarabhai Bhavan">Sarabhai Bhavan</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+              {/* Hostel Selection */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="hostel">
+                  Hostel
+                </label>
+                <Select required onValueChange={setHostel}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select hostel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Gajjar Bhavan">Gajjar Bhavan</SelectItem>
+                    <SelectItem value="Atal Bihari Vajpaye Bhavan">Atal Bihari Vajpaye Bhavan</SelectItem>
+                    <SelectItem value="Bhabha Bhavan">Bhabha Bhavan</SelectItem>
+                    <SelectItem value="Tagore Bhavan">Tagore Bhavan</SelectItem>
+                    <SelectItem value="Swamy Bhavan">Swamy Bhavan</SelectItem>
+                    <SelectItem value="Mother Teresa Bhavan">Mother Teresa Bhavan</SelectItem>
+                    <SelectItem value="Raman Bhavan">Raman Bhavan</SelectItem>
+                    <SelectItem value="Sarabhai Bhavan">Sarabhai Bhavan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-        {/* Name Input */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="name">
-            Your Name
-          </label>
-          <Input
-            className="w-full p-2 border border-gray-300 rounded-md"
-            type="text"
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+              {/* Name Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="name">
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
 
-        {/* Room Number Input */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="room">
-            Room Number & Floor
-          </label>
-          <Input
-            className="w-full p-2 border border-gray-300 rounded-md"
-            type="text"
-            placeholder="Room and floor number"
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-            required
-          />
-        </div>
+              {/* Room Number Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="room">
+                  Room & Floor
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g., Room 101, First Floor"
+                  value={room}
+                  onChange={(e) => setRoom(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
 
-        {/* Mobile Number Input */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="mobile">
-            Mobile Number
-          </label>
-          <Input
-            className="w-full p-2 border border-gray-300 rounded-md"
-            type="text"
-            placeholder="Enter your mobile number"
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-            required
-          />
-        </div>
+              {/* Mobile Number Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="mobile">
+                  Mobile Number
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="Enter 10-digit number"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
 
-        {/* Description Input */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="description">
-            Description
-          </label>
-          <Textarea
-            placeholder="Provide a brief description of your complaint"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
+              {/* File Upload */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="file">
+                  Attachments
+                </label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="file"
+                    onChange={(e) => setFiles(e.target.files ? e.target.files[0] : null)}
+                    className="w-full"
+                  />
+                  <Upload className="w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+            </div>
 
-        {/* File Input */}
-        <div className="flex flex-col">
-          <label className="text-black font-medium text-lg" htmlFor="file">
-            Attach Related Files (Optional)
-          </label>
-          <Input
-            className="w-full p-2 border border-gray-300 rounded-md"
-            type="file"
-            onChange={(e) => setFiles(e.target.files ? e.target.files[0] : null)}
-          />
-        </div>
+            {/* Description Input - Full Width */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700" htmlFor="description">
+                Description
+              </label>
+              <Textarea
+                placeholder="Please provide detailed information about your complaint..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="min-h-[120px]"
+                required
+              />
+            </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <Button className="w-80 py-2 bg-black-600 text-white rounded-md" type="submit" disabled={loading}>
+            {/* Error Message */}
+            {message && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{message}</AlertDescription>
+              </Alert>
+            )}
+          </form>
+        </CardContent>
+
+        <CardFooter className="flex justify-center pb-6">
+          <Button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full max-w-xs"
+          >
             {loading ? "Submitting..." : "Submit Complaint"}
           </Button>
-        </div>
-
-        {/* Error Message */}
-        {message && <p className="text-red-500 text-center mt-4">{message}</p>}
-      </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
 
 export default ComplainForm;
-

@@ -4,6 +4,7 @@ import { SignupFormSchema, FormState } from "@/lib/definitions";
 import { validateEmail } from "@/lib/utils";
 import { checkEmail } from "@/lib/db";
 import { sql } from '@vercel/postgres';
+import { loginUser } from "./login";
 
 export async function signup(state: FormState, formData: FormData) {
   const validatedFields = SignupFormSchema.safeParse({
@@ -15,6 +16,7 @@ export async function signup(state: FormState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
+    // console.log(validatedFields.error.flatten().fieldErrors)
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };
@@ -52,6 +54,8 @@ export async function signup(state: FormState, formData: FormData) {
       if (!user) {
         throw new Error("User creation failed.");
       }
+
+      loginUser(email, password)
 
       return { message: "Signup successful!" };
     } else {
