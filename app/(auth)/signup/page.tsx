@@ -53,7 +53,7 @@ export default function Page() {
       const result = await signup({}, formData);
 
       if (result?.errors) {
-        if ('general' in result.errors) {
+        if ("general" in result.errors) {
           setErrors({ password: result.errors.general });
         } else {
           setErrors(result.errors as ErrorState);
@@ -66,7 +66,7 @@ export default function Page() {
       alert("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
-      loginUser(email, password)
+      loginUser(email, password);
     }
   };
 
@@ -77,7 +77,7 @@ export default function Page() {
       return;
     }
 
-    setIsLoadingOTP(true)
+    setIsLoadingOTP(true);
 
     const result = await sendOTP({ email });
 
@@ -91,12 +91,13 @@ export default function Page() {
   };
 
   return (
-    <div className="mt-8 flex flex-col items-center mx-auto">
+    <div className="flex flex-col items-center mx-auto">
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-4 text-center">Sign up</h2>
         <div>
           <Input
             id="name"
-            className="text-black w-full"
+            className="w-full"
             type="text"
             name="name"
             placeholder="Enter your Name"
@@ -108,7 +109,7 @@ export default function Page() {
         {/* Email & OTP Request */}
         <div className="flex items-center mt-4">
           <Input
-            className="text-black w-full mr-2"
+            className="w-full mr-2"
             type="email"
             name="email"
             placeholder="Type your email address"
@@ -129,7 +130,7 @@ export default function Page() {
         {/* OTP Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="text"
             name="otp"
             placeholder="Enter your OTP"
@@ -143,7 +144,7 @@ export default function Page() {
         {/* Password Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="password"
             name="password"
             placeholder="Set your password"
@@ -151,13 +152,15 @@ export default function Page() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {errors.password && <p className="text-red-500">{errors.password[0]}</p>}
+          {errors.password && (
+            <p className="text-red-500">{errors.password[0]}</p>
+          )}
         </div>
 
         {/* Confirm Password Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="password"
             name="confirmPassword"
             placeholder="Verify your password"
@@ -171,7 +174,11 @@ export default function Page() {
         </div>
 
         {/* Submit Button */}
-        <Button className="w-full mt-6" type="submit" disabled={!otpSent || isLoading}>
+        <Button
+          className="w-full mt-6"
+          type="submit"
+          disabled={!otpSent || isLoading}
+        >
           {isLoading ? "Signing Up..." : "Signup"}
         </Button>
 
@@ -182,9 +189,7 @@ export default function Page() {
             Login
           </a>
         </div>
-
       </form>
     </div>
   );
 }
-

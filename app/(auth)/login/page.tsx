@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { loginUser } from "@/actions/login"
+import { loginUser } from "@/actions/login";
 
 export default function Page() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,11 +19,11 @@ export default function Page() {
 
     try {
       const response = await loginUser(email, password);
-      console.log(response)
+      console.log(response);
     } catch (err) {
-      const error = err as Error
+      const error = err as Error;
       if (error) {
-        setError(error.message || 'Something went wrong. Please try again.');
+        setError(error.message || "Something went wrong. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -31,16 +31,12 @@ export default function Page() {
   };
 
   return (
-    <div className="mt-8 flex flex-col items-center mx-auto">
-      <form onSubmit={handleLogin} className="w-full max-w-sm">
+    <div className="flex flex-col items-center justify-center mx-auto">
+      <form onSubmit={handleLogin} className="w-full md:w-72 lg:w-72 xl:w-72">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-
-        {error && (
-          <div className="text-red-500 text-center mb-4">{error}</div>
-        )}
-
+        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <Input
-          className="text-black w-80 mb-4"
+          className="mb-4"
           type="email"
           name="email"
           placeholder="Type your email address"
@@ -50,7 +46,7 @@ export default function Page() {
         />
 
         <Input
-          className="text-black w-full mb-4"
+          className="w-full mb-4"
           type="password"
           name="password"
           placeholder="Type your password"
@@ -59,12 +55,8 @@ export default function Page() {
           required
         />
 
-        <Button
-          className="w-full text-base"
-          type="submit"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Logging in...' : 'Login'}
+        <Button className="w-full text-base" type="submit" disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Login"}
         </Button>
 
         <div className="mt-4 text-center text-sm">
@@ -74,11 +66,12 @@ export default function Page() {
           </a>
         </div>
 
-        <div className="text-center text-sm mb-4 mt-4">
-          <a href="/login/forgot" className="text-gray-800 underline underline-offset-4">Forgot Password?</a>
+        <div className="text-center text-sm mt-4">
+          <a href="/login/forgot" className="underline underline-offset-4">
+            Forgot Password?
+          </a>
         </div>
       </form>
     </div>
   );
-};
-
+}

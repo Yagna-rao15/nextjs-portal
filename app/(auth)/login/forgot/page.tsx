@@ -40,7 +40,10 @@ export default function Page() {
     const result = await updatePassword({}, formData);
 
     if (result?.errors) {
-      alert(result?.errors || "Unable to Change your Password, Better luck next time");
+      alert(
+        result?.errors ||
+          "Unable to Change your Password, Better luck next time"
+      );
     } else {
       setErrors({});
       alert(result?.message || "Password chaged successfully");
@@ -67,14 +70,14 @@ export default function Page() {
   };
 
   return (
-    <div className="mt-8 flex flex-col items-center mx-auto">
+    <div className="flex flex-col items-center mx-auto">
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-4 text-center">Forgot Password</h2>
 
         {/* Name Input */}
         <div>
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="text"
             name="name"
             placeholder="Enter your Name"
@@ -86,7 +89,7 @@ export default function Page() {
         {/* Email & OTP Request */}
         <div className="flex items-center mt-4">
           <Input
-            className="text-black w-full mr-2"
+            className="w-full mr-2"
             type="email"
             name="email"
             placeholder="Type your email address"
@@ -107,7 +110,7 @@ export default function Page() {
         {/* OTP Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="text"
             name="otp"
             placeholder="Enter your OTP"
@@ -121,7 +124,7 @@ export default function Page() {
         {/* Password Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="password"
             name="password"
             placeholder="Set your password"
@@ -129,13 +132,15 @@ export default function Page() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {errors.password && <p className="text-red-500">{errors.password[0]}</p>}
+          {errors.password && (
+            <p className="text-red-500">{errors.password[0]}</p>
+          )}
         </div>
 
         {/* Confirm Password Input */}
         <div className="mt-4">
           <Input
-            className="text-black w-full"
+            className="w-full"
             type="password"
             name="confirmPassword"
             placeholder="Verify your password"
@@ -149,7 +154,11 @@ export default function Page() {
         </div>
 
         {/* Submit Button */}
-        <Button className="w-full mt-6" type="submit" disabled={!otpSent || isLoading}>
+        <Button
+          className="w-full mt-6"
+          type="submit"
+          disabled={!otpSent || isLoading}
+        >
           {isLoading ? "Just a sec....." : "Update Password"}
         </Button>
         <div className="mt-4 text-center text-sm">
@@ -162,4 +171,3 @@ export default function Page() {
     </div>
   );
 }
-
