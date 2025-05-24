@@ -44,8 +44,8 @@ export async function signup(state: FormState, formData: FormData) {
     const result = await checkEmail({ email });
     if (result.otp === otp) {
       const insertResult = await sql`
-        INSERT INTO users (name, email, password) 
-        VALUES (${name}, ${email}, ${password}) 
+        INSERT INTO users (name, email, password)
+        VALUES (${name}, ${email}, ${password})
         RETURNING id;
       `;
 

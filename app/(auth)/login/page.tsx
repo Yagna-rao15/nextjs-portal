@@ -31,7 +31,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mx-auto">
+    <div className="flex flex-col items-center mx-auto my-auto">
       <form onSubmit={handleLogin} className="w-full md:w-72 lg:w-72 xl:w-72">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
@@ -75,3 +75,4 @@ export default function Page() {
     </div>
   );
 }
+
