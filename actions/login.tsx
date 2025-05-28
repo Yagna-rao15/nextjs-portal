@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import pool from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -7,8 +7,8 @@ import { redirect } from "next/navigation";
 
 export async function loginUser(email: string, password: string) {
   const result = await pool.query(
-    "SELECT * FROM users WHERE email = $1 LIMIT 1",
-    [email]
+    "SELECT email FROM users WHERE email = $1 LIMIT 1",
+    [email],
   );
 
   if (result.rows.length === 0 || result.rows[0].password !== password) {
@@ -18,4 +18,3 @@ export async function loginUser(email: string, password: string) {
   // await createSession(email);
   redirect("/home");
 }
-

@@ -67,7 +67,7 @@ export default function Page() {
         </div>
 
         <div className="text-center text-sm mt-4">
-          <a href="/login/forgot" className="underline underline-offset-4">
+          <a href="forgot" className="underline underline-offset-4">
             Forgot Password?
           </a>
         </div>
@@ -75,4 +75,3 @@ export default function Page() {
     </div>
   );
 }
-
