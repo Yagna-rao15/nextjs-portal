@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { JWTPayload } from "jose";
 
 export const SignupFormSchema = z
   .object({
@@ -22,10 +21,3 @@ export const SignupFormSchema = z
     path: ["confirmPassword"],
     message: "Passwords must match.",
   });
-
-export interface SessionPayload extends JWTPayload {
-  user?: {
-    id: string;
-    expiresAt: Date | number;
-  };
-}

@@ -8,6 +8,7 @@ import { sendOTP } from "@/actions/sendOTP";
 import { signup } from "@/actions/signup";
 
 type SignPageProps = {
+  // Because signup and forgot password use same things
   use: "signup" | "forgot";
 };
 
@@ -32,7 +33,7 @@ export default function SignPage({ use }: SignPageProps) {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingOTP, setIsLoadingOTP] = useState(false);
+  const [isLoadingStepOne, setIsLoadingStepOne] = useState(false);
   const [step, setStep] = useState(1);
 
   const handleInputChange = (field: Field, value: string): void => {
@@ -41,7 +42,7 @@ export default function SignPage({ use }: SignPageProps) {
     setErrors((prev) => ({ ...prev, [field]: null, general: null }));
   };
 
-  const validateEmail = (): boolean => {
+  const validateStepOne = (): boolean => {
     const newErrors: Errors = { ...errors }; // Preserve other errors
 
     if (!formData.email.trim()) {
@@ -54,10 +55,9 @@ export default function SignPage({ use }: SignPageProps) {
     return newErrors.email === null;
   };
 
-  const validatePasswordReset = (): boolean => {
-    const newErrors: Errors = { ...errors }; // Preserve other errors
+  const validateStepTwo = (): boolean => {
+    const newErrors: Errors = { ...errors };
 
-    // Clear password-related errors first
     newErrors.otp = null;
     newErrors.password = null;
     newErrors.confirmPassword = null;
@@ -87,9 +87,9 @@ export default function SignPage({ use }: SignPageProps) {
     );
   };
 
-  const handleSendOTP = async () => {
-    if (!validateEmail()) return;
-    setIsLoadingOTP(true);
+  const handleStepOne = async () => {
+    if (!validateStepOne()) return;
+    setIsLoadingStepOne(true);
 
     try {
       await sendOTP({ email: formData.email });
@@ -104,14 +104,14 @@ export default function SignPage({ use }: SignPageProps) {
       }
       setErrors(newErrors);
     } finally {
-      setIsLoadingOTP(false);
+      setIsLoadingStepOne(false);
     }
   };
 
-  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleStepTwo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!validatePasswordReset()) return;
+    if (!validateStepTwo()) return;
     setIsLoading(true);
     setErrors({
       email: null,
@@ -129,7 +129,7 @@ export default function SignPage({ use }: SignPageProps) {
       formDataToSend.append("password", formData.password);
       formDataToSend.append("confirmPassword", formData.confirmPassword);
 
-      const result = await signup(formDataToSend);
+      const result = await signup(formDataToSend, use);
 
       if (result.error) {
         const newErrors: Errors = { ...errors };
@@ -176,7 +176,7 @@ export default function SignPage({ use }: SignPageProps) {
     }
   };
 
-  const handleBackToEmail = () => {
+  const handleBackToStepOne = () => {
     setStep(1);
     setFormData((prev) => ({
       ...prev,
@@ -230,15 +230,15 @@ export default function SignPage({ use }: SignPageProps) {
             <Button
               className="w-full text-base mb-4"
               type="button"
-              onClick={handleSendOTP}
-              disabled={isLoadingOTP}
+              onClick={handleStepOne}
+              disabled={isLoadingStepOne}
             >
-              {isLoadingOTP ? "Sending OTP..." : "Send OTP"}
+              {isLoadingStepOne ? "Sending OTP..." : "Send OTP"}
             </Button>
           </>
         ) : (
           // Step 2: OTP and New Password
-          <form onSubmit={handleResetPassword}>
+          <form onSubmit={handleStepTwo}>
             <p className="text-sm text-gray-600 text-center mb-4">
               Enter the OTP sent to <strong>{formData.email}</strong> and set
               your {use === "signup" ? "" : "new"} password.
@@ -316,7 +316,7 @@ export default function SignPage({ use }: SignPageProps) {
             <Button
               className="w-full text-base"
               type="button"
-              onClick={handleBackToEmail}
+              onClick={handleBackToStepOne}
               variant="outline"
               disabled={isLoading}
             >

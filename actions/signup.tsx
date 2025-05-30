@@ -4,6 +4,7 @@ import { SignupFormSchema } from "@/lib/definitions";
 import { checkSVNITEmail } from "@/lib/utils";
 import pool from "@/lib/db";
 import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 type Field = "email" | "otp" | "password" | "confirmPassword";
 type Errors = Record<Field | "general", string | null>;
@@ -15,7 +16,10 @@ type SignInResponse = {
   error?: string | Errors;
 };
 
-export async function signup(formData: FormData): Promise<SignInResponse> {
+export async function signup(
+  formData: FormData,
+  use: "signup" | "forgot",
+): Promise<SignInResponse> {
   const validatedFields = SignupFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -24,7 +28,6 @@ export async function signup(formData: FormData): Promise<SignInResponse> {
   });
 
   if (!validatedFields.success) {
-    console.warn("Form server error");
     const flattened = validatedFields.error.flatten();
 
     const fieldErrors: Errors = {
@@ -55,7 +58,7 @@ export async function signup(formData: FormData): Promise<SignInResponse> {
       status: 400,
       error: {
         email: emailValidationError,
-        password: "Emial Error",
+        password: null,
         otp: null,
         confirmPassword: null,
         general: null,
@@ -64,22 +67,24 @@ export async function signup(formData: FormData): Promise<SignInResponse> {
   }
 
   try {
-    const existingUser = await pool.query(
-      "SELECT email FROM users WHERE email = $1 LIMIT 1;",
-      [email],
-    );
+    if (use != "forgot") {
+      const existingUser = await pool.query(
+        "SELECT email FROM users WHERE email = $1 LIMIT 1;",
+        [email],
+      );
 
-    if (existingUser.rows.length > 0) {
-      return {
-        status: 403,
-        error: {
-          email: "Email is already registered.",
-          otp: null,
-          password: null,
-          confirmPassword: null,
-          general: null,
-        },
-      };
+      if (existingUser.rows.length > 0) {
+        return {
+          status: 403,
+          error: {
+            email: "Email is already registered.",
+            otp: null,
+            password: null,
+            confirmPassword: null,
+            general: null,
+          },
+        };
+      }
     }
 
     const result = await pool.query(
@@ -87,9 +92,10 @@ export async function signup(formData: FormData): Promise<SignInResponse> {
       [email],
     );
     if (result.rows[0].otp === otp) {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const insertResult = await pool.query(
         "INSERT INTO users (email, password) VALUES ($1, $2) ON CONFLICT (email) DO UPDATE SET email = $1, password = $2 RETURNING id;",
-        [email, password],
+        [email, hashedPassword],
       );
 
       const user = insertResult.rows[0];
@@ -118,10 +124,10 @@ export async function signup(formData: FormData): Promise<SignInResponse> {
         password: null,
         confirmPassword: null,
         email: null,
-        general: "An error occurred while creating your account.",
+        general: "An Error occurred, Please try again Later",
       },
     };
   } finally {
-    redirect("/home");
+    redirect("/login");
   }
 }
