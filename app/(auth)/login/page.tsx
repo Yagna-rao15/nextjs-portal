@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/actions/login";
+// import { redirect } from "next/dist/server/api-utils";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -19,14 +20,12 @@ export default function Page() {
 
     try {
       const response = await loginUser(email, password);
-      console.log(response);
-    } catch (err) {
-      const error = err as Error;
-      if (error) {
-        setError(error.message || "Something went wrong. Please try again.");
+      if (response.message != "Success") {
+        setError(response.message || "Something went wrong. Please try again.");
       }
-    } finally {
       setIsLoading(false);
+    } catch (error) {
+      console.warn(error);
     }
   };
 

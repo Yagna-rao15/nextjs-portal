@@ -21,3 +21,23 @@ export const SignupFormSchema = z
     path: ["confirmPassword"],
     message: "Passwords must match.",
   });
+
+export const ComplaintFormSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  category: z.enum(["plumbing", "electrical", "internet", "cleaning", "security", "mess", "others"], {
+    message: "Select appropriat category",
+  }),
+  name: z.string().min(1, { message: "Enter your name" }),
+  mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
+  building: z.enum(["bhabha", "swamy", "gajjar", "abvb", "tagore", "mtb", "raman", "sarabhai"], {
+    message: "Select appropriat hostel",
+  }),
+  floor: z.string(),
+  room: z.string(),
+  location: z.enum(["room", "bathroom", "corridor", "common", "mess", "other"], {
+    message: "Select appropriat location type",
+  }),
+  description: z.string().min(10, "Description too short"),
+});
+
+export type ComplaintFormValues = z.infer<typeof ComplaintFormSchema>;

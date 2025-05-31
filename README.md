@@ -3,8 +3,8 @@
 ## Database & Infrastructure
 
 - [x] DB Integration
-- [ ] Configure environment variables for different deployment stages
-- [ ] Set up production database (Neon PostgreSQL integration)
+- [x] Configure environment variables for different deployment stages
+- [x] Set up production database (Neon PostgreSQL integration)
 - [ ] Implement database migrations and seeding
 - [ ] Add database backup and recovery system
 - [ ] Set up Redis for caching and session storage
@@ -15,7 +15,7 @@
 - [x] Password reset functionality
 - [x] Setup Session
 - [ ] User profile management
-- [ ] Role-based access control (Admin, Faculty, Student, Hostel Warden, Accountant)
+- [x] Role-based access control (Admin, Faculty, Student, Hostel Warden, Accountant)
 - [ ] Bulk user import/export (CSV/Excel)
 - [ ] User activity logging and audit trails
 - [ ] Multi-factor authentication (2FA)
@@ -36,7 +36,7 @@
 - [ ] Hostel fee management and billing
 - [ ] Mess menu planning and management
 - [ ] Visitor management system
-- [ ] Maintenance request tracking
+- [x] Maintenance request tracking
 - [ ] Hostel inventory management
 - [ ] Leave/outing request system
 - [ ] Mess attendance tracking

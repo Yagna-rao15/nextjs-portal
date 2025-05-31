@@ -1,6 +1,13 @@
 import "./globals.css";
-// import "@fontsource/inter/variable.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata = {
+  title: "Hostel University System",
+  description: "A comprehensive system for university management",
+};
 
 export default function RootLayout({
   children,
@@ -10,16 +17,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head></head>
-      <body>
+      <body className={inter.className}>
         <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            // disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

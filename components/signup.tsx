@@ -69,8 +69,7 @@ export default function SignPage({ use }: SignPageProps) {
     }
 
     if (!formData.password) {
-      newErrors.password =
-        use === "signup" ? "Password is required" : "New password is required";
+      newErrors.password = use === "signup" ? "Password is required" : "New password is required";
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
@@ -80,11 +79,7 @@ export default function SignPage({ use }: SignPageProps) {
     }
 
     setErrors(newErrors);
-    return (
-      newErrors.otp === null &&
-      newErrors.password === null &&
-      newErrors.confirmPassword === null
-    );
+    return newErrors.otp === null && newErrors.password === null && newErrors.confirmPassword === null;
   };
 
   const handleStepOne = async () => {
@@ -197,20 +192,15 @@ export default function SignPage({ use }: SignPageProps) {
   return (
     <div className="flex flex-col items-center mx-auto my-auto">
       <div className="w-full md:w-72 lg:w-72 xl:w-72">
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          {use === "signup" ? "Sign up" : "Forgot Password"}
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">{use === "signup" ? "Sign up" : "Forgot Password"}</h2>
 
-        {errors.general && (
-          <div className="text-red-500 text-center mb-4">{errors.general}</div>
-        )}
+        {errors.general && <div className="text-red-500 text-center mb-4">{errors.general}</div>}
 
         {step === 1 ? (
           // Step 1: Email Input
           <>
             <p className="text-sm text-gray-600 dark:text-muted-foreground text-center mb-4">
-              Enter your email address and we will send you an OTP to verify
-              your identity.
+              Enter your email address and we will send you an OTP to verify your identity.
             </p>
 
             <Input
@@ -221,18 +211,9 @@ export default function SignPage({ use }: SignPageProps) {
               onChange={(e) => handleInputChange("email", e.target.value)}
               required
             />
-            {errors.email && (
-              <div className="text-red-500 text-sm mb-2 -mt-2">
-                {errors.email}
-              </div>
-            )}
+            {errors.email && <div className="text-red-500 text-sm mb-2 -mt-2">{errors.email}</div>}
 
-            <Button
-              className="w-full text-base mb-4"
-              type="button"
-              onClick={handleStepOne}
-              disabled={isLoadingStepOne}
-            >
+            <Button className="w-full text-base mb-4" type="button" onClick={handleStepOne} disabled={isLoadingStepOne}>
               {isLoadingStepOne ? "Sending OTP..." : "Send OTP"}
             </Button>
           </>
@@ -240,8 +221,8 @@ export default function SignPage({ use }: SignPageProps) {
           // Step 2: OTP and New Password
           <form onSubmit={handleStepTwo}>
             <p className="text-sm text-gray-600 text-center mb-4">
-              Enter the OTP sent to <strong>{formData.email}</strong> and set
-              your {use === "signup" ? "" : "new"} password.
+              Enter the OTP sent to <strong>{formData.email}</strong> and set your {use === "signup" ? "" : "new"}{" "}
+              password.
             </p>
 
             {/* OTP Input */}
@@ -250,37 +231,22 @@ export default function SignPage({ use }: SignPageProps) {
               type="text"
               placeholder="Enter 6-digit OTP"
               value={formData.otp}
-              onChange={(e) =>
-                handleInputChange(
-                  "otp",
-                  e.target.value.replace(/\D/g, "").slice(0, 6),
-                )
-              }
+              onChange={(e) => handleInputChange("otp", e.target.value.replace(/\D/g, "").slice(0, 6))}
               maxLength={6}
               required
             />
-            {errors.otp && (
-              <div className="text-red-500 text-sm mb-2 -mt-2">
-                {errors.otp}
-              </div>
-            )}
+            {errors.otp && <div className="text-red-500 text-sm mb-2 -mt-2">{errors.otp}</div>}
 
             {/* Password Input */}
             <Input
               className="mb-4"
               type="password"
-              placeholder={
-                use === "signup" ? "Enter your password" : "Enter new password"
-              }
+              placeholder={use === "signup" ? "Enter your password" : "Enter new password"}
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
               required
             />
-            {errors.password && (
-              <div className="text-red-500 text-sm mb-2 -mt-2">
-                {errors.password}
-              </div>
-            )}
+            {errors.password && <div className="text-red-500 text-sm mb-2 -mt-2">{errors.password}</div>}
 
             {/* Confirm Password Input */}
             <Input
@@ -288,22 +254,12 @@ export default function SignPage({ use }: SignPageProps) {
               type="password"
               placeholder="Confirm your password"
               value={formData.confirmPassword}
-              onChange={(e) =>
-                handleInputChange("confirmPassword", e.target.value)
-              }
+              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
               required
             />
-            {errors.confirmPassword && (
-              <div className="text-red-500 text-sm mb-2 -mt-2">
-                {errors.confirmPassword}
-              </div>
-            )}
+            {errors.confirmPassword && <div className="text-red-500 text-sm mb-2 -mt-2">{errors.confirmPassword}</div>}
 
-            <Button
-              className="w-full text-base mb-2"
-              type="submit"
-              disabled={isLoading}
-            >
+            <Button className="w-full text-base mb-2" type="submit" disabled={isLoading}>
               {isLoading
                 ? use === "signup"
                   ? "Signing up..."
