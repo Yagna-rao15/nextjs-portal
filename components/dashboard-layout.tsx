@@ -47,6 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { logout } from "@/actions/logout";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -148,15 +149,19 @@ export function DashboardLayout({
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                    <a href="/student/profile" className="flex items-center w-full">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </a>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                  <DropdownMenuItem asChild>
+                    <a href="/feedback" className="flex items-center w-full">
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Feedback
+                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>

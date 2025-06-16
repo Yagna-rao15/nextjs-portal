@@ -4,9 +4,13 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/actions/login";
-// import { redirect } from "next/dist/server/api-utils";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get("callbackUrl") || "/";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +26,8 @@ export default function Page() {
       const response = await loginUser(email, password);
       if (response.message != "Success") {
         setError(response.message || "Something went wrong. Please try again.");
+      } else {
+        router.push(callbackUrl);
       }
       setIsLoading(false);
     } catch (error) {

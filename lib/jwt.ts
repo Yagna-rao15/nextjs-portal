@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export interface AccessTokenPayload {
   email: string;
@@ -32,10 +33,7 @@ export function generateRefreshToken(payload: RefreshTokenPayload): string {
 
 export function verifyAccessToken(token: string): AccessTokenPayload | null {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_ACCESS_SECRET!,
-    ) as AccessTokenPayload;
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccessTokenPayload;
   } catch (error) {
     console.log(error);
     return null;
@@ -44,12 +42,24 @@ export function verifyAccessToken(token: string): AccessTokenPayload | null {
 
 export function verifyRefreshToken(token: string): RefreshTokenPayload | null {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_REFRESH_SECRET!,
-    ) as RefreshTokenPayload;
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as RefreshTokenPayload;
   } catch (error) {
     console.log(error);
+    return null;
+  }
+}
+
+export async function getUserEmailFromCookie(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken");
+
+  if (!token?.value) return null;
+
+  try {
+    const payload = verifyAccessToken(token.value);
+    return payload?.email || null;
+  } catch (err) {
+    console.error("Token verification failed:", err);
     return null;
   }
 }

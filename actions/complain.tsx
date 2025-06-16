@@ -2,30 +2,9 @@
 
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
-// import { NextRequest } from "next/server";
 import { revalidatePath } from "next/cache";
 import pool from "@/lib/db";
-
-interface ComplaintData {
-  id: string;
-  email: string;
-  category: string;
-  name: string;
-  mobile: string;
-  building: string;
-  floor?: string;
-  room?: string;
-  location: string;
-  description: string;
-  status: "Pending" | "In Progress" | "Resolved";
-  priority: "Low" | "Normal" | "High" | "Urgent";
-  createdAt: string;
-  updatedAt: string;
-  attachments?: string[];
-  rating?: number;
-  resolvedDate?: string;
-  expectedResolution?: string;
-}
+import { ComplaintData } from "@/lib/interface";
 
 interface SubmitComplaintResult {
   success: boolean;
@@ -152,8 +131,8 @@ export async function submitComplaint(formData: FormData): Promise<SubmitComplai
     await pool.query(
       `INSERT INTO complaints (
     id, email, category, name, mobile, building, floor, room, location,
-    description, status, priority, created_at, updated_at, attachments,
-    rating, resolved_date, expected_resolution
+    description, status, priority, "createdAt", "updatedAt", attachments,
+    rating, "resolvedDate", "expectedResolution"
   ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9,
     $10, $11, $12, $13, $14, $15,
@@ -201,7 +180,7 @@ export async function fetchUserComplaints(email: string): Promise<ComplaintData[
   try {
     if (!email) return [];
 
-    const result = await pool.query("SELECT * FROM complaints WHERE email = $1 ORDER BY created_at DESC", [email]);
+    const result = await pool.query('SELECT * FROM complaints WHERE email = $1 ORDER BY "createdAt" DESC', [email]);
 
     return result.rows; // just raw complaint data from DB
   } catch (error) {
@@ -210,21 +189,20 @@ export async function fetchUserComplaints(email: string): Promise<ComplaintData[
   }
 }
 
-import { cookies } from "next/headers";
-import { verifyAccessToken } from "@/lib/jwt";
-
-export async function getUserEmailFromCookie(): Promise<string | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken");
-
-  if (!token?.value) return null;
-
+export async function updateComplaintRating(complaintId: string, rating: number) {
   try {
-    const payload = verifyAccessToken(token.value);
-    return payload?.email || null;
-  } catch (err) {
-    console.error("Token verification failed:", err);
-    return null;
+    if (rating < 1 || rating > 5) {
+      return { success: false, error: "Rating must be between 1 and 5" };
+    }
+
+    const result = await pool.query("UPDATE complaints SET rating = $1 WHERE id = $2", [rating, complaintId]);
+    // await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+    if (result) {
+      return { success: true, message: "Rating updated successfully" };
+    }
+  } catch (error) {
+    console.error("Error updating complaint rating:", error);
+    return { success: false, error: "Failed to update rating" };
   }
 }
 // // Server action for updating complaint status (for admin use)

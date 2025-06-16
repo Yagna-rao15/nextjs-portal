@@ -7,12 +7,7 @@ import { checkSVNITEmail } from "@/lib/utils";
 import { sendOTP } from "@/actions/sendOTP";
 import { signup } from "@/actions/signup";
 
-type SignPageProps = {
-  // Because signup and forgot password use same things
-  use: "signup" | "forgot";
-};
-
-export default function SignPage({ use }: SignPageProps) {
+export default function SignPage({ use }: { use: "signup" | "forgot" }) {
   type Field = "email" | "otp" | "password" | "confirmPassword";
   type FormDataType = Record<Field, string>;
   type Errors = Record<Field | "general", string | null>;

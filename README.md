@@ -16,7 +16,7 @@
 - [x] Setup Session
 - [ ] User profile management
 - [x] Role-based access control (Admin, Faculty, Student, Hostel Warden, Accountant)
-- [ ] Bulk user import/export (CSV/Excel)
+- [ ] Bulk user import/export (CSV/Excel) [ Admin ]
 - [ ] User activity logging and audit trails
 - [ ] Multi-factor authentication (2FA)
 
